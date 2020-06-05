@@ -1,0 +1,23 @@
+version: "2.4"
+services:
+  go_genpdf:
+    hostname: ${HOSTNAME}_go_genpdf
+    container_name: ${COMPOSE_PROJECT_NAME}_go_genpdf
+    image: ${REGISTRY_ADDRESS}/${COMPOSE_PROJECT_NAME}_go_genpdf:${GO_GENPDF_BRANCH}
+    env_file:
+      - .env
+    ports:
+      - "${GO_GENPDF_PORT}:8080"
+    networks:
+      - unicom_go_genpdf
+    environment:
+      - "PS1=$$(whoami)@$$(hostname):$$(pwd) $$ "
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://${GRAYLOG_HOST}:${GRAYLOG_PORT}"
+        tag: "${HOSTNAME}"
+    mem_limit: 512M
+
+networks:
+  unicom_go_genpdf:
